@@ -6,7 +6,7 @@ import { fileURLToPath } from "url";
 import "./dbconfig.js";
 
 export default class Server {
-  contrcutor() {
+  constructor() {
     this.app = express();
     this.port = process.env.PORT || 3001;
     this.middlewares();
@@ -15,17 +15,17 @@ export default class Server {
   middlewares() {
     this.app.use(cors());
     this.app.use(express.json());
-    this.app.use(morgan());
+    this.app.use(morgan("dev"));
 
     const __dirname = dirname(fileURLToPath(import.meta.url));
     console.log(__dirname);
-    this.app.use(express.statuc(__dirname + "/../../public/"));
+    this.app.use(express.static(__dirname + "/../../public/"));
   }
 
   listen() {
     this.app.listen(this.port, () =>
-      console.log(
-        `El servidor se esta ejecutando en: http:localhost:${this.port}`
+      console.info(
+        `El servidor se esta ejecutando en: http://localhost:${this.port}`
       )
     );
   }
