@@ -6,13 +6,12 @@ export const crearCancion = async (req, res) => {
     await nuevaCancion.save();
 
     res.status(201).json({
-      mensaje: "Cancion creada correctamente",
+      mensaje: "Canción creada correctamente",
       cancion: nuevaCancion,
     });
   } catch (error) {
-    console.error("Error al crear cancion:", error);
     res.status(500).json({
-      mensaje: "Ocurrio un error al crear el cancion",
+      mensaje: "Ocurrió un error al crear la canción",
       error: error.message,
     });
   }
@@ -30,24 +29,73 @@ export const listarCanciones = async (req, res) => {
   }
 };
 
-export const borrarCancionID = async (req, res) => {
+export const obtenerCancionID = async (req, res) => {
   try {
     const id = req.params.id;
-    const cancionEliminada = await Cancion.findByIdAndDelete(id);
 
-    if (!cancionEliminada){
-        return res.status(404).json({
-            mensaje: "No se encontro la cancion con ese ID"
-        })
+    const cancion = await Cancion.findById(id);
+
+    if (!cancion) {
+      return res.status(404).json({
+        mensaje: "No se encontró la canción con ese ID",
+      });
+    }
+
+    res.status(200).json(cancion);
+  } catch (error) {
+    res.status(500).json({
+      mensaje: "Error al obtener canción",
+      error: error.message,
+    });
+  }
+};
+
+export const editarCancionID = async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    const cancionEditada = await Cancion.findByIdAndUpdate(id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!cancionEditada) {
+      return res.status(404).json({
+        mensaje: "No se encontró la canción con ese ID",
+      });
     }
 
     res.status(200).json({
-        mensaje: "Cancion eliminada correctamente",
-        cancion: cancionEliminada,
-    })
+      mensaje: "Canción editada correctamente",
+      cancion: cancionEditada,
+    });
   } catch (error) {
     res.status(500).json({
-      mensaje: "Error al borrar cancion",
+      mensaje: "Error al editar canción",
+      error: error.message,
+    });
+  }
+};
+
+export const borrarCancionID = async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    const cancionEliminada = await Cancion.findByIdAndDelete(id);
+
+    if (!cancionEliminada) {
+      return res.status(404).json({
+        mensaje: "No se encontró la canción con ese ID",
+      });
+    }
+
+    res.status(200).json({
+      mensaje: "Canción eliminada correctamente",
+      cancion: cancionEliminada,
+    });
+  } catch (error) {
+    res.status(500).json({
+      mensaje: "Error al borrar canción",
       error: error.message,
     });
   }
