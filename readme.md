@@ -1,9 +1,9 @@
 🎵 AlgoRitmo 2.0 — Backend
-API REST construida por Sebastián Flomenbaun
+API REST creada por Sebastián Flomenbaun
 
-Este backend forma parte del proyecto AlgoRitmo 2.0, una plataforma musical con manejo de usuarios, playlists personalizadas y administración completa de canciones.
+Este backend forma parte del proyecto AlgoRitmo 2.0, una plataforma musical con usuarios, playlists personalizadas y un panel administrador completo.
 
-Diseñado con Node.js + Express + MongoDB, el objetivo es ofrecer una API clara, escalable, segura y fácil de consumir desde el frontend en React.
+Construido con Node.js + Express + MongoDB, ofrece una API clara, escalable, segura y pensada para integrarse perfectamente con el frontend desarrollado en React.
 
 🚀 Tecnologías Utilizadas
 
@@ -21,7 +21,7 @@ Morgan
 
 Dotenv
 
-Nodemon (modo desarrollo)
+Nodemon (desarrollo)
 
 📌 Funcionalidades del Backend
 🔐 Usuarios
@@ -32,7 +32,7 @@ Login
 
 Validación de credenciales
 
-(Opcional) sistema de JWT listo para incorporar
+JWT funcional (token firmado y verificado desde el login)
 
 🎼 Canciones
 
@@ -44,19 +44,19 @@ Obtener canción por ID
 
 Editar canción
 
-Borrar canción
+Eliminar canción
 
 🎧 Playlist por usuario (próximo módulo)
 
 Crear playlist por usuario
 
-Agregar canción a playlist
+Agregar canciones
 
-Quitar canción
+Quitar canciones
 
 Obtener playlist
 
-Borrar playlist
+Eliminar playlist
 
 📁 Estructura de Carpetas
 src/
@@ -97,42 +97,56 @@ npm install
 
 3️⃣ Crear archivo .env
 PORT=3001
-MONGODB=mongodb+srv://TU_URI
+MONGODB=tu_uri_de_mongo
+SECRET_JWT=tu_clave_secreta
 
 4️⃣ Iniciar el servidor
-Modo desarrollo
+🔧 Modo desarrollo
 npm run dev
 
-Modo producción
+🚀 Modo producción
 npm start
 
-🧪 Probar en Postman
-Crear canción
+🧪 Probar en Postman / Thunder Client
+➤ Crear canción
 
-POST http://localhost:3001/api/canciones/
+POST:
+http://localhost:3001/api/canciones/
 
 Body JSON:
 
 {
- "nombre": "Sweet Child O’ Mine",
- "artista": "Guns N' Roses",
- "categoria": "Rock",
- "album": "Appetite for Destruction",
- "anio": 1987,
- "imagen": "https://imagen.com/cancion.jpg",
- "duracion": "03:58"
+  "nombre": "Sweet Child O’ Mine",
+  "artista": "Guns N' Roses",
+  "categoria": "Rock",
+  "album": "Appetite for Destruction",
+  "anio": 1987,
+  "imagen": "https://imagen.com/cancion.jpg",
+  "duracion": "03:58"
 }
 
-Login de usuario
+➤ Login de usuario
 
-POST http://localhost:3001/api/usuarios/login
+POST:
+http://localhost:3001/api/usuarios/login
+
+🔗 Enlaces Importantes
+
+💻 Backend desplegado: https://algo-ritmo2-0-backend.vercel.app/
+
+🎵 Frontend (sitio online): https://algoritmo-2.netlify.app/
+
+📁 Repositorio Backend: https://github.com/duncann555/AlgoRitmo2.0-backend
+
+📁 Repositorio Frontend: https://github.com/duncann555/AlgoRitmo2.0-frontend
 
 🧑‍💻 Autor
-Sebastián Flomenbaun
 
+Sebastián Flomenbaun
 🔥 Fullstack Developer & Cybersecurity Student
 🔗 GitHub: https://github.com/duncann555
 
 📄 Licencia
 
-Proyecto personal y libre para uso educativo y profesional. No forma parte del proyecto grupal original.
+Proyecto personal, libre para uso educativo y profesional.
+No forma parte del proyecto grupal original.

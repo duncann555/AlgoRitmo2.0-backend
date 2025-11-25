@@ -1,5 +1,6 @@
+import generarJWT from "../middlewares/generarJWT.js";
 import Usuario from "../models/usuario.js";
-import bcrypt from "bcrypt"; 
+import bcrypt from "bcrypt";
 
 export const registrarUsuario = async (req, res) => {
   try {
@@ -10,23 +11,24 @@ export const registrarUsuario = async (req, res) => {
       return res.status(400).json({ mensaje: "El email ya está registrado" });
     }
 
-    // 🔥 Siempre registrar como usuario común
-    const nuevoUsuario = new Usuario({ 
-      nombre, 
-      email, 
-      password, 
-      rol: "user"        // ← SOLUCIÓN
-    });
-
-    // Encriptar contraseña
     const salt = bcrypt.genSaltSync(10);
-    nuevoUsuario.password = bcrypt.hashSync(password, salt);
+
+    const nuevoUsuario = new Usuario({
+      nombre,
+      email,
+      password: bcrypt.hashSync(password, salt),
+      rol: "user"
+    });
 
     await nuevoUsuario.save();
 
     res.status(201).json({
       mensaje: "Usuario registrado correctamente",
-      usuario: { id: nuevoUsuario._id, email: nuevoUsuario.email }
+      usuario: {
+        id: nuevoUsuario._id,
+        nombre: nuevoUsuario.nombre,
+        email: nuevoUsuario.email
+      }
     });
 
   } catch (error) {
@@ -51,12 +53,21 @@ export const loginUsuario = async (req, res) => {
       return res.status(400).json({ mensaje: "Usuario o contraseña incorrectos" });
     }
 
+    // 🔥 ESTA es la parte correcta
+    const token = generarJWT(
+      usuario._id,
+      usuario.nombre,
+      usuario.email,
+      usuario.rol
+    );
+
     res.status(200).json({
       mensaje: "Login exitoso",
       uid: usuario._id,
       nombre: usuario.nombre,
       email: usuario.email,
-      rol: usuario.rol
+      rol: usuario.rol,
+      token
     });
 
   } catch (error) {
@@ -66,3 +77,4 @@ export const loginUsuario = async (req, res) => {
     });
   }
 };
+

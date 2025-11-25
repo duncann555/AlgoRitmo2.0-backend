@@ -2,28 +2,21 @@ import Cancion from "../models/cancion.js";
 
 export const crearCancion = async (req, res) => {
   try {
-    const { nombre, artista, categoria, album, anio, imagen, duracion } =
-      req.body;
+    const datos = req.body;
 
-    if (!imagen || !/^https?:\/\/.*\.(jpg|jpeg|png|webp)$/i.test(imagen)) {
-      return res.status(400).json({
-        mensaje: "Debe enviar una URL de imagen válida",
-      });
+    // Validación manual de imagen (además de la del Schema)
+    if (!datos.imagen || !/^https?:\/\/.*\.(jpg|jpeg|png|webp)$/i.test(datos.imagen)) {
+      return res.status(400).json({ mensaje: "Debe enviar una URL de imagen válida" });
     }
 
-    const nueva = new Cancion({
-      nombre,
-      artista,
-      categoria,
-      album,
-      anio,
-      imagen,
-      duracion,
+    const nuevaCancion = new Cancion(datos);
+    await nuevaCancion.save();
+
+    res.status(201).json({
+      mensaje: "Canción creada correctamente",
+      cancion: nuevaCancion,
     });
 
-    await nueva.save();
-
-    res.status(201).json({ mensaje: "Canción creada correctamente" });
   } catch (error) {
     res.status(500).json({
       mensaje: "Error al registrar canción",
@@ -31,6 +24,7 @@ export const crearCancion = async (req, res) => {
     });
   }
 };
+
 
 export const listarCanciones = async (req, res) => {
   try {
@@ -92,26 +86,23 @@ export const editarCancionID = async (req, res) => {
   }
 };
 
-export const borrarCancionID = async (req, res) => {
+export const borrarCancion = async (req, res) => {
   try {
-    const id = req.params.id;
+    const { id } = req.params;
 
-    const cancionEliminada = await Cancion.findByIdAndDelete(id);
+    const cancion = await Cancion.findByIdAndDelete(id);
 
-    if (!cancionEliminada) {
-      return res.status(404).json({
-        mensaje: "No se encontró la canción con ese ID",
-      });
+    if (!cancion) {
+      return res.status(404).json({ mensaje: "Canción no encontrada" });
     }
 
-    res.status(200).json({
-      mensaje: "Canción eliminada correctamente",
-      cancion: cancionEliminada,
-    });
+    res.status(200).json({ mensaje: "Canción eliminada correctamente" });
+
   } catch (error) {
     res.status(500).json({
       mensaje: "Error al borrar canción",
-      error: error.message,
+      error: error.message
     });
   }
 };
+

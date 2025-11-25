@@ -1,33 +1,35 @@
 import mongoose, { Schema } from "mongoose";
 
-const usuarioSchema = new Schema({
-  nombre: {
-    type: String,
-    required: true,
-    trim: true,
-    minLength: 3,
-    maxLength: 30,
+const usuarioSchema = new Schema(
+  {
+    nombre: {
+      type: String,
+      minLength: 3,
+      maxLength: 30,
+      required: true,
+      trim: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+      match: [
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+        "El email no es válido",
+      ],
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+    rol: {
+      type: String,
+      default: "user",
+      enum: ["user", "admin"],
+    },
   },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-    trim: true,
-    match: [
-      /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/,
-      "El email no es válido"
-    ]
-  },
-  password: {
-    type: String,
-    required: true,
-    trim: true,
-  },
-  rol: {
-    type: String,
-    default: "user",
-    enum: ["user", "admin"],
-  },
-});
+  { timestamps: true }
+);
 
 export default mongoose.model("usuario", usuarioSchema);

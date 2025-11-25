@@ -3,22 +3,21 @@ import mongoose, { Schema } from "mongoose";
 const cancionSchema = new Schema({
   nombre: {
     type: String,
-    required: true,
-    trim: true,
     minLength: 2,
     maxLength: 100,
+    required: true,
+    trim: true,
   },
   artista: {
     type: String,
-    required: true,
-    trim: true,
     minLength: 2,
     maxLength: 50,
+    required: true,
+    trim: true,
   },
   categoria: {
     type: String,
     required: true,
-    trim: true,
     enum: [
       "Pop",
       "Rock",
@@ -39,10 +38,10 @@ const cancionSchema = new Schema({
   },
   album: {
     type: String,
-    required: true,
-    trim: true,
     minLength: 2,
     maxLength: 50,
+    required: true,
+    trim: true,
   },
   anio: {
     type: Number,
