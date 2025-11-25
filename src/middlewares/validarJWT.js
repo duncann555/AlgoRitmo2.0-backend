@@ -1,31 +1,23 @@
 import jwt from "jsonwebtoken";
 
 const validarJWT = (req, res, next) => {
-  try {
-    const token = req.header("Authorization");
+  const token = req.header("Authorization")?.replace("Bearer ", "");
 
-    if (!token) {
-      return res.status(401).json({ mensaje: "No hay token en la petición" });
+  // 1) ADMIN DEL FRONT SIN TOKEN
+  if (!token) {
+    if (req.header("x-admin-front") === "true") {
+      req.usuario = { rol: "admin", nombre: "AdminFront" };
+      return next();
     }
+    return res.status(401).json({ mensaje: "No hay token en la petición" });
+  }
 
-    // Para soportar "Bearer asd123..."
-    const tokenLimpio = token.replace("Bearer ", "");
-
-    const decoded = jwt.verify(tokenLimpio, process.env.SECRET_JWT);
-
-    // Guardamos datos del usuario en la request
-    req.usuario = {
-      id: decoded.id,
-      nombre: decoded.nombre,
-      email: decoded.email,
-      rol: decoded.rol,
-    };
-
+  try {
+    const payload = jwt.verify(token, process.env.JWT_SECRET);
+    req.usuario = payload;
     next();
-
   } catch (error) {
-    console.error(error);
-    res.status(401).json({ mensaje: "Token inválido o expirado" });
+    return res.status(401).json({ mensaje: "Token no válido" });
   }
 };
 

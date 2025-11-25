@@ -40,6 +40,7 @@ export const registrarUsuario = async (req, res) => {
 };
 
 export const loginUsuario = async (req, res) => {
+    console.log("BODY RECIBIDO EN LOGIN:", req.body);
   try {
     const { email, password } = req.body;
     const usuario = await Usuario.findOne({ email });
