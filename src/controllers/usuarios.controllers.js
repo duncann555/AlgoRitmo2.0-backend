@@ -11,8 +11,8 @@ export const registrarUsuario = async (req, res) => {
       return res.status(400).json({ mensaje: "El email ya está registrado" });
     }
 
-    const nuevoUsuario = new Usuario({ nombre, email, password });
-
+    // Forzamos que este sea admin sí o sí
+    const nuevoUsuario = new Usuario({ nombre, email, password, rol: "admin" });
     // 1. Encriptar contraseña (Salt genera aleatoriedad)
     const salt = bcrypt.genSaltSync(10);
     nuevoUsuario.password = bcrypt.hashSync(password, salt);
@@ -24,7 +24,9 @@ export const registrarUsuario = async (req, res) => {
       usuario: { id: nuevoUsuario._id, email: nuevoUsuario.email },
     });
   } catch (error) {
-    res.status(500).json({ mensaje: "Error al registrar", error: error.message });
+    res
+      .status(500)
+      .json({ mensaje: "Error al registrar", error: error.message });
   }
 };
 
@@ -33,27 +35,31 @@ export const loginUsuario = async (req, res) => {
     const { email, password } = req.body;
     const usuario = await Usuario.findOne({ email });
 
-    // Validaciones básicas
     if (!usuario) {
-      return res.status(400).json({ mensaje: "Usuario o contraseña incorrectos" });
+      return res
+        .status(400)
+        .json({ mensaje: "Usuario o contraseña incorrectos" });
     }
 
-    // 2. Comparar contraseña encriptada con la que mandan
     const passwordValido = bcrypt.compareSync(password, usuario.password);
     if (!passwordValido) {
-      return res.status(400).json({ mensaje: "Usuario o contraseña incorrectos" });
+      return res
+        .status(400)
+        .json({ mensaje: "Usuario o contraseña incorrectos" });
     }
 
-    // 3. Generar el Token
-    const token = await generarJWT(usuario._id, usuario.nombre);
+    const token = await generarJWT(usuario._id, usuario.nombre, usuario.rol);
 
     res.status(200).json({
       mensaje: "Login exitoso",
       uid: usuario._id,
       nombre: usuario.nombre,
-      token: token, // Mandamos el token al front
+      email: usuario.email,
+      rol: usuario.rol,     // 👈 CLAVE
+      token,
     });
   } catch (error) {
     res.status(500).json({ mensaje: "Error al loguear", error: error.message });
   }
 };
+

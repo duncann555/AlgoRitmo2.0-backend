@@ -1,7 +1,4 @@
-import jwt from "jsonwebtoken";
-
 const validarJWT = (req, res, next) => {
-  // Vamos a pedir el token en los headers con la key "x-token"
   const token = req.header("x-token");
 
   if (!token) {
@@ -10,18 +7,23 @@ const validarJWT = (req, res, next) => {
     });
   }
 
+  // 👇 EXCEPCIÓN PARA TU ADMIN DEL FRONT
+  if (token === "ADMIN_ENV_FAKE_TOKEN") {  // mismo string que usás en el front
+    req.id = "admin-env";
+    req.nombre = "Administrador Env";
+    req.rol = "admin";
+    return next();
+  }
+
   try {
     const payload = jwt.verify(token, process.env.SECRET_JWT);
-    // Guardamos los datos del usuario en la request por si los necesitamos luego
     req.id = payload.uid;
     req.nombre = payload.nombre;
-    
-    next(); // Todo joya, pasá.
+    req.rol = payload.rol;
+    next();
   } catch (error) {
     return res.status(401).json({
       mensaje: "Token no válido",
     });
   }
 };
-
-export default validarJWT;

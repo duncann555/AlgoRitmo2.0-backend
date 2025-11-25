@@ -1,10 +1,9 @@
 import jwt from "jsonwebtoken";
 
-const generarJWT = (uid, nombre) => {
+const generarJWT = (uid, nombre, rol) => {
   return new Promise((resolve, reject) => {
-    const payload = { uid, nombre };
+    const payload = { uid, nombre, rol };
 
-    // Firma el token con tu clave secreta. Expira en 2 horas.
     jwt.sign(
       payload,
       process.env.SECRET_JWT,
@@ -19,5 +18,6 @@ const generarJWT = (uid, nombre) => {
     );
   });
 };
+
 
 export default generarJWT;
