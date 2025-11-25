@@ -4,13 +4,13 @@ import {
   listarCanciones,
   obtenerCancionID,
   editarCancionID,
-  borrarCancion
+  borrarCancion,
 } from "../controllers/canciones.controllers.js";
 
 import validarJWT from "../middlewares/validarJWT.js";
-//import validarRolAdmin from "../middlewares/validarRolAdmin.js";
 import validarCancion from "../middlewares/validarCancion.js";
 import validarMongoID from "../middlewares/validarMongoID.js";
+import validarRolAdmin from "../middlewares/validarRolAdmin.js"; // ✅ AHORA SÍ
 
 const router = Router();
 
@@ -29,7 +29,7 @@ router.get("/:id", validarMongoID, obtenerCancionID);
 router.post(
   "/",
   validarJWT,
-  //validarRolAdmin,
+  validarRolAdmin,
   validarCancion,
   crearCancion
 );
@@ -37,7 +37,7 @@ router.post(
 router.put(
   "/:id",
   validarJWT,
-  //validarRolAdmin,
+  validarRolAdmin,
   validarMongoID,
   validarCancion,
   editarCancionID
@@ -46,7 +46,7 @@ router.put(
 router.delete(
   "/:id",
   validarJWT,
- // validarRolAdmin,
+  validarRolAdmin,
   validarMongoID,
   borrarCancion
 );

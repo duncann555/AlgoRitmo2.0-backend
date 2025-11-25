@@ -1,8 +1,7 @@
 import { Router } from "express";
-
 import {
   registrarUsuario,
-  loginUsuario
+  loginUsuario,
 } from "../controllers/usuarios.controllers.js";
 
 import validarRegistroUsuario from "../middlewares/validarRegistroUsuario.js";

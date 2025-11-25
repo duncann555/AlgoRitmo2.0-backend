@@ -2,7 +2,7 @@ import { body } from "express-validator";
 import validarCampos from "./validarCampos.js";
 
 const validarRegistroUsuario = [
- body("nombre")
+  body("nombre")
     .notEmpty().withMessage("El nombre es obligatorio")
     .isLength({ min: 3, max: 30 })
     .withMessage("El nombre debe tener entre 3 y 30 caracteres"),

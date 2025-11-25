@@ -1,5 +1,4 @@
 import { Router } from "express";
-
 import {
   obtenerPlaylist,
   agregarAPlaylist,
@@ -16,8 +15,8 @@ const router = Router();
 // -----------------------------
 router.get(
   "/:userId",
-  validarJWT,          // debe estar logueado
-  validarPlaylist,     // valida que userId sea MongoID
+  validarJWT,      // debe estar logueado
+  validarPlaylist, // valida userId (y opcionalmente ownership)
   obtenerPlaylist
 );
 
@@ -27,7 +26,7 @@ router.get(
 router.post(
   "/:userId/agregar/:cancionId",
   validarJWT,
-  validarPlaylist,     // valida userId + cancionId
+  validarPlaylist, // valida userId + cancionId
   agregarAPlaylist
 );
 

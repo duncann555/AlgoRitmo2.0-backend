@@ -6,13 +6,13 @@ const generarJWT = (id, nombre, email, rol) => {
 
     const token = jwt.sign(
       payload,
-      process.env.SECRET_JWT,   
-      { expiresIn: "2h" }       
+      process.env.JWT_SECRET,   // 🔴 mismo nombre que en validarJWT
+      { expiresIn: "2h" }
     );
 
     return token;
   } catch (error) {
-    console.error(error);
+    console.error("Error al generar el token:", error.message);
     throw new Error("Error al generar el token");
   }
 };

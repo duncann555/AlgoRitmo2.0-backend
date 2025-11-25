@@ -1,6 +1,8 @@
 import { body } from "express-validator";
 import validarCampos from "./validarCampos.js";
 
+const anioActual = new Date().getFullYear();
+
 const validarCancion = [
   body("nombre")
     .notEmpty().withMessage("El nombre es obligatorio")
@@ -22,8 +24,8 @@ const validarCancion = [
 
   body("anio")
     .notEmpty().withMessage("El año es obligatorio")
-    .isInt({ min: 1900, max: new Date().getFullYear() })
-    .withMessage("El año debe ser válido (entre 1900 y el actual)"),
+    .isInt({ min: 1900, max: anioActual })
+    .withMessage(`El año debe ser válido (entre 1900 y ${anioActual})`),
 
   body("imagen")
     .notEmpty().withMessage("La imagen es obligatoria")

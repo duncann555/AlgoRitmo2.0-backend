@@ -10,17 +10,20 @@ export const obtenerPlaylist = async (req, res) => {
       return res.status(400).json({ mensaje: "ID de usuario inválido" });
     }
 
-    let playlist = await Playlist.findOne({ usuario: userId }).populate("canciones");
+    let playlist = await Playlist.findOne({ usuario: userId }).populate(
+      "canciones"
+    );
 
+    // Si no existe, la creamos vacía
     if (!playlist) {
       playlist = new Playlist({ usuario: userId, canciones: [] });
       await playlist.save();
     }
 
-    res.status(200).json(playlist);
-
+    return res.status(200).json(playlist);
   } catch (error) {
-    res.status(500).json({
+    console.error("Error al obtener playlist:", error.message);
+    return res.status(500).json({
       mensaje: "Error al obtener la playlist",
       error: error.message,
     });
@@ -45,27 +48,28 @@ export const agregarAPlaylist = async (req, res) => {
       playlist = new Playlist({ usuario: userId, canciones: [] });
     }
 
-    if (!playlist.canciones.some(id => id.toString() === cancionId)) {
+    // Evita duplicados
+    if (!playlist.canciones.some((id) => id.toString() === cancionId)) {
       playlist.canciones.push(cancionId);
     }
 
     await playlist.save();
     await playlist.populate("canciones");
 
-    res.status(200).json({
+    return res.status(200).json({
       mensaje: "Canción agregada a la playlist",
       playlist,
     });
-
   } catch (error) {
-    res.status(500).json({
+    console.error("Error al agregar canción a playlist:", error.message);
+    return res.status(500).json({
       mensaje: "Error al agregar canción",
       error: error.message,
     });
   }
 };
 
-// Eliminar canción
+// Eliminar canción de la playlist
 export const borrarDePlaylist = async (req, res) => {
   try {
     const { userId, cancionId } = req.params;
@@ -77,26 +81,26 @@ export const borrarDePlaylist = async (req, res) => {
       return res.status(400).json({ mensaje: "IDs inválidos" });
     }
 
-    let playlist = await Playlist.findOne({ usuario: userId });
+    const playlist = await Playlist.findOne({ usuario: userId });
 
     if (!playlist) {
       return res.status(404).json({ mensaje: "La playlist no existe" });
     }
 
     playlist.canciones = playlist.canciones.filter(
-      id => id.toString() !== cancionId
+      (id) => id.toString() !== cancionId
     );
 
     await playlist.save();
     await playlist.populate("canciones");
 
-    res.status(200).json({
+    return res.status(200).json({
       mensaje: "Canción eliminada de la playlist",
       playlist,
     });
-
   } catch (error) {
-    res.status(500).json({
+    console.error("Error al eliminar canción de playlist:", error.message);
+    return res.status(500).json({
       mensaje: "Error al eliminar canción",
       error: error.message,
     });

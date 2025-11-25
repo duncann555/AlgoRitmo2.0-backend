@@ -6,6 +6,7 @@ const validarRolAdmin = (req, res, next) => {
       .status(403)
       .json({ mensaje: "No autorizado (se requiere rol admin)" });
   }
+
   next();
 };
 
