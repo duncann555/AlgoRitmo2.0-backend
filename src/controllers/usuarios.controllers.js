@@ -29,6 +29,11 @@ export const registrarUsuario = async (req, res) => {
   }
 };
 
+import Usuario from "../models/usuario.js";
+import jwt from "jsonwebtoken"; // 1. IMPORTALO
+
+// ... (registrarUsuario queda igual) ...
+
 export const loginUsuario = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -39,18 +44,37 @@ export const loginUsuario = async (req, res) => {
       return res.status(404).json({ mensaje: "Usuario no encontrado" });
     }
 
+    // OJO: Acá deberías estar usando bcrypt.compare() si encriptaste la pass.
+    // Si no la encriptaste (peligroso), dejalo así.
     if (usuario.password !== password) {
       return res.status(400).json({ mensaje: "Contraseña incorrecta" });
     }
 
+    // 2. GENERAR EL TOKEN (EL PASE VIP)
+    const token = jwt.sign(
+      {
+        uid: usuario._id,
+        nombre: usuario.nombre,
+        email: usuario.email,
+        rol: usuario.rol // ¡Agregamos el rol para que el Front sepa si es Admin!
+      },
+      process.env.SECRET_JWT, // La llave secreta del boliche
+      { expiresIn: "7d" } // Vence en 7 días
+    );
+
+    // 3. RESPONDER CON EL TOKEN
     res.status(200).json({
       mensaje: "Login exitoso",
+      token: token, // <--- ¡ACÁ VA EL ORO!
       usuario: {
-        id: usuario._id,
+        _id: usuario._id,
+        nombre: usuario.nombre,
         email: usuario.email,
+        rol: usuario.rol
       },
     });
   } catch (error) {
+    console.error(error);
     res.status(500).json({
       mensaje: "Error al iniciar sesión",
       error: error.message,
