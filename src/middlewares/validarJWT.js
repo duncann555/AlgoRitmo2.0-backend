@@ -13,10 +13,15 @@ const validarJWT = (req, res, next) => {
   }
 
   try {
+    console.log("🟢 Token recibido:", token);
+    console.log("🟢 Payload decodificado:", payload);
+
     const payload = jwt.verify(token, process.env.JWT_SECRET);
     req.usuario = payload;
     next();
   } catch (error) {
+    console.log("❌ Error en validarJWT:", error.message);
+
     return res.status(401).json({ mensaje: "Token no válido" });
   }
 };

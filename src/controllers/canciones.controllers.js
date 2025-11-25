@@ -1,12 +1,20 @@
 import Cancion from "../models/cancion.js";
 
 export const crearCancion = async (req, res) => {
+  console.log("📥 BODY RECIBIDO EN /api/canciones:", req.body);
+  console.log("🔐 USUARIO DEL TOKEN:", req.usuario);
+
   try {
     const datos = req.body;
 
     // Validación manual de imagen (además de la del Schema)
-    if (!datos.imagen || !/^https?:\/\/.*\.(jpg|jpeg|png|webp)$/i.test(datos.imagen)) {
-      return res.status(400).json({ mensaje: "Debe enviar una URL de imagen válida" });
+    if (
+      !datos.imagen ||
+      !/^https?:\/\/.*\.(jpg|jpeg|png|webp)$/i.test(datos.imagen)
+    ) {
+      return res
+        .status(400)
+        .json({ mensaje: "Debe enviar una URL de imagen válida" });
     }
 
     const nuevaCancion = new Cancion(datos);
@@ -16,7 +24,6 @@ export const crearCancion = async (req, res) => {
       mensaje: "Canción creada correctamente",
       cancion: nuevaCancion,
     });
-
   } catch (error) {
     res.status(500).json({
       mensaje: "Error al registrar canción",
@@ -24,7 +31,6 @@ export const crearCancion = async (req, res) => {
     });
   }
 };
-
 
 export const listarCanciones = async (req, res) => {
   try {
@@ -97,12 +103,10 @@ export const borrarCancion = async (req, res) => {
     }
 
     res.status(200).json({ mensaje: "Canción eliminada correctamente" });
-
   } catch (error) {
     res.status(500).json({
       mensaje: "Error al borrar canción",
-      error: error.message
+      error: error.message,
     });
   }
 };
-
