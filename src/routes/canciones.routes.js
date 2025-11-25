@@ -6,17 +6,16 @@ import {
   editarCancionID,
   borrarCancionID,
 } from "../controllers/canciones.controllers.js";
-import validarJWT from "../helpers/validar-jwt.js"; // Importar el middleware
 
 const router = Router();
 
 router.route("/")
-  .post(validarJWT, crearCancion) // <--- ACÁ PROTEGEMOS
-  .get(listarCanciones);
+  .post(crearCancion)      
+  .get(listarCanciones);   
 
 router.route("/:id")
-  .get(obtenerCancionID)
-  .put(validarJWT, editarCancionID) // <--- ACÁ TAMBIÉN
-  .delete(validarJWT, borrarCancionID); // <--- Y ACÁ
+  .get(obtenerCancionID)   
+  .put(editarCancionID)    
+  .delete(borrarCancionID) 
 
 export default router;

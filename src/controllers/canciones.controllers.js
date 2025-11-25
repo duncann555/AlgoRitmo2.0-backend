@@ -2,6 +2,7 @@ import Cancion from "../models/cancion.js";
 
 export const crearCancion = async (req, res) => {
   try {
+    console.log("Datos recibidos:", req.body); // <--- AGREGÁ ESTO para ver qué llega
     const nuevaCancion = new Cancion(req.body);
     await nuevaCancion.save();
 
@@ -10,6 +11,7 @@ export const crearCancion = async (req, res) => {
       cancion: nuevaCancion,
     });
   } catch (error) {
+    console.log("ERROR EN CREAR CANCIÓN:", error); // <--- AGREGÁ ESTO URGENTE
     res.status(500).json({
       mensaje: "Ocurrió un error al crear la canción",
       error: error.message,

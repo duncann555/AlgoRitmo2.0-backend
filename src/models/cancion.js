@@ -52,9 +52,8 @@ const cancionSchema = new Schema({
   },
   imagen: {
     type: String,
-    required: true,
     trim: true,
-    match: /^https?:\/\/[\w\-]+(\.[\w\-]+)+[/#?]?.*$/,
+    
 },
   duracion: {
     type: String,

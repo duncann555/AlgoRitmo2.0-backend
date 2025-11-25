@@ -1,6 +1,5 @@
 import Usuario from "../models/usuario.js";
-import bcrypt from "bcrypt"; // Importamos bcrypt
-import generarJWT from "../helpers/jwt.js"; // Importamos el generador
+import bcrypt from "bcrypt"; 
 
 export const registrarUsuario = async (req, res) => {
   try {
@@ -11,9 +10,15 @@ export const registrarUsuario = async (req, res) => {
       return res.status(400).json({ mensaje: "El email ya está registrado" });
     }
 
-    // Forzamos que este sea admin sí o sí
-    const nuevoUsuario = new Usuario({ nombre, email, password, rol: "admin" });
-    // 1. Encriptar contraseña (Salt genera aleatoriedad)
+    // 🔥 Siempre registrar como usuario común
+    const nuevoUsuario = new Usuario({ 
+      nombre, 
+      email, 
+      password, 
+      rol: "user"        // ← SOLUCIÓN
+    });
+
+    // Encriptar contraseña
     const salt = bcrypt.genSaltSync(10);
     nuevoUsuario.password = bcrypt.hashSync(password, salt);
 
@@ -21,12 +26,14 @@ export const registrarUsuario = async (req, res) => {
 
     res.status(201).json({
       mensaje: "Usuario registrado correctamente",
-      usuario: { id: nuevoUsuario._id, email: nuevoUsuario.email },
+      usuario: { id: nuevoUsuario._id, email: nuevoUsuario.email }
     });
+
   } catch (error) {
-    res
-      .status(500)
-      .json({ mensaje: "Error al registrar", error: error.message });
+    res.status(500).json({
+      mensaje: "Error al registrar",
+      error: error.message
+    });
   }
 };
 
@@ -36,30 +43,26 @@ export const loginUsuario = async (req, res) => {
     const usuario = await Usuario.findOne({ email });
 
     if (!usuario) {
-      return res
-        .status(400)
-        .json({ mensaje: "Usuario o contraseña incorrectos" });
+      return res.status(400).json({ mensaje: "Usuario o contraseña incorrectos" });
     }
 
     const passwordValido = bcrypt.compareSync(password, usuario.password);
     if (!passwordValido) {
-      return res
-        .status(400)
-        .json({ mensaje: "Usuario o contraseña incorrectos" });
+      return res.status(400).json({ mensaje: "Usuario o contraseña incorrectos" });
     }
-
-    const token = await generarJWT(usuario._id, usuario.nombre, usuario.rol);
 
     res.status(200).json({
       mensaje: "Login exitoso",
       uid: usuario._id,
       nombre: usuario.nombre,
       email: usuario.email,
-      rol: usuario.rol,     // 👈 CLAVE
-      token,
+      rol: usuario.rol
     });
+
   } catch (error) {
-    res.status(500).json({ mensaje: "Error al loguear", error: error.message });
+    res.status(500).json({
+      mensaje: "Error al loguear",
+      error: error.message
+    });
   }
 };
-
