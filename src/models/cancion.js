@@ -32,8 +32,8 @@ const cancionSchema = new Schema({
       "Jazz",
       "Romantico",
       "Lentos",
-      "Cuarteto", 
-      "Clasica", 
+      "Cuarteto",
+      "Clasica",
       "Trap",
     ],
   },
@@ -52,9 +52,12 @@ const cancionSchema = new Schema({
   },
   imagen: {
     type: String,
-    trim: true,
-    
-},
+    required: [true, "La imagen es obligatoria"],
+    match: [
+      /^https?:\/\/.*\.(jpg|jpeg|png|webp)$/i,
+      "La URL de imagen no es válida",
+    ],
+  },
   duracion: {
     type: String,
     required: true,

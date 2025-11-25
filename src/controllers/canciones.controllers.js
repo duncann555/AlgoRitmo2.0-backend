@@ -2,18 +2,31 @@ import Cancion from "../models/cancion.js";
 
 export const crearCancion = async (req, res) => {
   try {
-    console.log("Datos recibidos:", req.body); // <--- AGREGÁ ESTO para ver qué llega
-    const nuevaCancion = new Cancion(req.body);
-    await nuevaCancion.save();
+    const { nombre, artista, categoria, album, anio, imagen, duracion } =
+      req.body;
 
-    res.status(201).json({
-      mensaje: "Canción creada correctamente",
-      cancion: nuevaCancion,
+    if (!imagen || !/^https?:\/\/.*\.(jpg|jpeg|png|webp)$/i.test(imagen)) {
+      return res.status(400).json({
+        mensaje: "Debe enviar una URL de imagen válida",
+      });
+    }
+
+    const nueva = new Cancion({
+      nombre,
+      artista,
+      categoria,
+      album,
+      anio,
+      imagen,
+      duracion,
     });
+
+    await nueva.save();
+
+    res.status(201).json({ mensaje: "Canción creada correctamente" });
   } catch (error) {
-    console.log("ERROR EN CREAR CANCIÓN:", error); // <--- AGREGÁ ESTO URGENTE
     res.status(500).json({
-      mensaje: "Ocurrió un error al crear la canción",
+      mensaje: "Error al registrar canción",
       error: error.message,
     });
   }
