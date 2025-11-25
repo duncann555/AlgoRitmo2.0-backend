@@ -19,7 +19,7 @@ export default class Server {
 
     const __dirname = dirname(fileURLToPath(import.meta.url));
     console.log(__dirname);
-    this.app.use(express.static(__dirname + "/../../public/"));
+   // this.app.use(express.static(__dirname + "/../../public/"));
   }
 
   listen() {
