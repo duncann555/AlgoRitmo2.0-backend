@@ -32,7 +32,10 @@ const cancionSchema = new Schema({
       "Jazz",
       "Romantico",
       "Lentos",
-    ]
+      "Cuarteto", 
+      "Clasica", 
+      "Trap",
+    ],
   },
   album: {
     type: String,
@@ -52,7 +55,9 @@ const cancionSchema = new Schema({
     required: true,
     trim: true,
     match: /^https?:\/\/[\w\-]+(\.[\w\-]+)+[/#?]?.*$/,
-  },
+    
+    default: "https://drive.google.com/uc?export=view&id=1RGYkIppypVEn_BGrF1qgp7MH0ZKRUApI" 
+},
   duracion: {
     type: String,
     required: true,

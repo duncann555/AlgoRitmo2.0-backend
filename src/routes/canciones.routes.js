@@ -9,15 +9,13 @@ import {
 
 const router = Router();
 
-// Rutas generales
 router.route("/")
-  .post(crearCancion)      // Crear una canción
-  .get(listarCanciones);   // Listar todas
+  .post(crearCancion)      
+  .get(listarCanciones);   
 
-// Rutas por ID
 router.route("/:id")
-  .get(obtenerCancionID)   // Obtener una canción por ID
-  .put(editarCancionID)    // Editar una canción por ID
-  .delete(borrarCancionID) // Borrar una canción por ID
+  .get(obtenerCancionID)   
+  .put(editarCancionID)    
+  .delete(borrarCancionID) 
 
 export default router;
